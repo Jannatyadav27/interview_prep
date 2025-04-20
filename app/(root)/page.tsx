@@ -13,13 +13,22 @@ import {
 async function Home() {
   const user = await getCurrentUser();
 
+  if (!user || !user.id) {
+    return (
+      <div className="p-6 text-center">
+        <h2 className="text-2xl font-semibold">Please log in to continue</h2>
+      </div>
+    );
+  }
+
   const [userInterviews, allInterview] = await Promise.all([
-    getInterviewsByUserId(user?.id!),
-    getLatestInterviews({ userId: user?.id! }),
+    getInterviewsByUserId(user.id),
+    getLatestInterviews({ userId: user.id }),
   ]);
 
-  const hasPastInterviews = userInterviews?.length! > 0;
-  const hasUpcomingInterviews = allInterview?.length! > 0;
+  const hasPastInterviews = !!userInterviews?.length;
+  const hasUpcomingInterviews = !!allInterview?.length;
+
 
   return (
     <>
