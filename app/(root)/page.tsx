@@ -13,11 +13,15 @@ import {
 async function Home() {
   const user = await getCurrentUser();
 
-  if (!user || !user.id) {
+  // Early return if user is not logged in
+  if (!user?.id) {
     return (
-      <div className="p-6 text-center">
-        <h2 className="text-2xl font-semibold">Please log in to continue</h2>
-      </div>
+      <section className="flex flex-col items-center justify-center h-[60vh]">
+        <h2 className="text-2xl font-bold mb-4">Please log in to view interviews</h2>
+        <Link href="/login">
+          <Button className="btn-primary">Go to Login</Button>
+        </Link>
+      </section>
     );
   }
 
@@ -26,9 +30,8 @@ async function Home() {
     getLatestInterviews({ userId: user.id }),
   ]);
 
-  const hasPastInterviews = !!userInterviews?.length;
-  const hasUpcomingInterviews = !!allInterview?.length;
-
+  const hasPastInterviews = !!userInterviews && userInterviews.length > 0;
+  const hasUpcomingInterviews = !!allInterview && allInterview.length > 0;
 
   return (
     <>
@@ -58,10 +61,10 @@ async function Home() {
 
         <div className="interviews-section">
           {hasPastInterviews ? (
-            userInterviews?.map((interview) => (
+            userInterviews.map((interview) => (
               <InterviewCard
                 key={interview.id}
-                userId={user?.id}
+                userId={user.id}
                 interviewId={interview.id}
                 role={interview.role}
                 type={interview.type}
@@ -80,14 +83,14 @@ async function Home() {
 
         <div className="interviews-section">
           {hasUpcomingInterviews ? (
-            allInterview?.map((interview) => (
+            allInterview.map((interview) => (
               <InterviewCard
                 key={interview.id}
-                userId={user?.id}
+                userId={user.id}
                 interviewId={interview.id}
                 role={interview.role}
                 type={interview.type}
-                techstack={interview.techstack} 
+                techstack={interview.techstack}
                 createdAt={interview.createdAt}
               />
             ))

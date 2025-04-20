@@ -11,7 +11,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
 
   try {
     const formattedTranscript = transcript
-      .map( 
+      .map(
         (sentence: { role: string; content: string }) =>
           `- ${sentence.role}: ${sentence.content}\n`
       )
